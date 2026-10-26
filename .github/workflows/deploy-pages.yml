@@ -1,5 +1,5 @@
 # Publishes a static export of the prototype to GitHub Pages on every push to
-# main: https://sannaomdahl.github.io/ledger-ai-prototype/ (customer view at /kunde/)
+# main: https://sannaomdahl.github.io/ (customer view at /kunde/)
 # The site is public. Emails are off there (no server for /api/notify).
 name: Deploy to GitHub Pages
 
@@ -33,7 +33,7 @@ jobs:
         env:
           STATIC_EXPORT: "1"
           NEXT_PUBLIC_STATIC_EXPORT: "1"
-          NEXT_PUBLIC_BASE_PATH: /ledger-ai-prototype
+          # The user site serves at the root, so no base path.
       # Keep GitHub from running Jekyll, which would hide the _next folder.
       - run: touch out/.nojekyll
       - uses: actions/upload-pages-artifact@v3

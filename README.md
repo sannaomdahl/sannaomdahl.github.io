@@ -43,6 +43,6 @@ Uten nøkkel svarer ruten 503 og siden bruker de innebygde svarene.
 
 - Lokalt: legg `ANTHROPIC_API_KEY=...` i `.env.local` og kjør `npm run dev`.
 - Hostet med server (Vercel e.l.): sett `ANTHROPIC_API_KEY` som miljøvariabel.
-- GitHub Pages er statisk og har ingen server. Sett `NEXT_PUBLIC_BASE_PATH`
-  som før og `NEXT_PUBLIC_ASK_URL=https://<din-vercel-app>/api/ask` ved bygging
-  hvis chatten der skal gå via en hostet kopi.
+- GitHub Pages (https://sannaomdahl.github.io/kunde/) er statisk og har ingen
+  server. Sett `NEXT_PUBLIC_ASK_URL=https://<din-vercel-app>/api/ask` ved
+  bygging hvis chatten der skal gå via en hostet kopi.
