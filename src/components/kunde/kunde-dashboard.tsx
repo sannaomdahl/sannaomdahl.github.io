@@ -800,7 +800,10 @@ function StatusLine({ tone, label }: { tone: Tone; label?: string }) {
       {tone === "done" ? (
         <CheckIcon className="size-3.5" aria-hidden="true" />
       ) : tone === "focus" ? (
-        <LoaderCircleIcon className="size-3.5" aria-hidden="true" />
+        <LoaderCircleIcon
+          className="size-3.5 motion-safe:animate-spin motion-safe:[animation-duration:2.5s]"
+          aria-hidden="true"
+        />
       ) : tone === "truls" ? (
         <LoaderCircleIcon
           className="size-3.5 animate-spin [animation-duration:2.5s]"
