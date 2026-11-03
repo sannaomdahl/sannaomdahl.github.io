@@ -1,6 +1,6 @@
 // Dummy data for the Sanna-style customer view: Fjordlys Rådgivning AS, the
 // consulting firm from the sanna.no mockups, seen by its daglig leder. The
-// accountant is Truls Uppheim (statsautorisert), as on the website. Numbers
+// accountant is Patricia Uppheim (statsautorisert), as on the website. Numbers
 // echo the website where it shows them (omsetning 1 284 000, +12 %, lønn
 // 612 000, utestående 412 000, AGA 136 400 on 16 Nov) and are invented
 // around that.
@@ -23,10 +23,10 @@ export const TRIPLETEX_URL = "https://www.fortnox.se/"
 export const BANK_URL = "https://seb.se/foretag"
 
 export const ACCOUNTANT = {
-  name: "Truls Uppheim",
-  first: "Truls",
+  name: "Patricia Lamberstam",
+  first: "Patricia",
   title: "Din redovisningskonsult",
-  photo: "team/truls.webp",
+  photo: "team/patricia.png",
   reply: "Svarar oftast inom en timme",
 }
 
@@ -101,7 +101,7 @@ export const DONE: {
   },
 ]
 
-/** Locked until Truls gets there. */
+/** Locked until Patricia gets there. */
 export const UPCOMING: { id: string; title: string; detail: string }[] = [
   {
     id: "lonn-nov",
@@ -111,11 +111,11 @@ export const UPCOMING: { id: string; title: string; detail: string }[] = [
   {
     id: "arsregnskap",
     title: "Skriv under årsredovisningen för 2025",
-    detail: "Truls skickar den till Bolagsverket i januari",
+    detail: "Patricia skickar den till Bolagsverket i januari",
   },
 ]
 
-/** In Truls' hands: the customer sees it move, and does nothing. */
+/** In Patricia' hands: the customer sees it move, and does nothing. */
 export const WITH_TRULS: { id: string; title: string; detail: string }[] = [
   {
     id: "kvitteringer",
@@ -131,7 +131,7 @@ export type PayLine = {
   role: string
   base: number
   commission: number
-  /** Something Truls wants them to see before approving. */
+  /** Something Patricia wants them to see before approving. */
   note?: string
   /** Started mid-month: paid for the working days from this one. */
   startDay?: number
@@ -242,7 +242,7 @@ export const STATS: Stat[] = [
   },
 ]
 
-/** Truls' two sentences about the month, as on the website. */
+/** Patricia' two sentences about the month, as on the website. */
 export const SUMMARY = [
   "Omsättningen var 1 284 000 kr, 12 % högre än i augusti. Ökningen kommer från två nya kunder.",
   "Lönekostnaderna ökade med 64 000 kr eftersom en ny konsult började 1 september.",
@@ -273,7 +273,7 @@ export const MONTHS: MonthRow[] = [
   { month: "Dec", booket: 960_000 },
 ]
 
-/** The year's revenue goal, agreed with Truls in January. */
+/** The year's revenue goal, agreed with Patricia in January. */
 export const GOAL_2026 = 13_500_000
 
 export function invoicedYtd() {
@@ -346,7 +346,7 @@ export const DEADLINES: { month: string; items: Deadline[] }[] = [
         date: "2026-11-12",
         label: "Arbetsgivaravgifter",
         status: "planned",
-        note: "136 400 kr. Truls flyttar pengar från sparkontot i tid.",
+        note: "136 400 kr. Patricia flyttar pengar från sparkontot i tid.",
         warn: true,
       },
     ],
@@ -356,7 +356,7 @@ export const DEADLINES: { month: string; items: Deadline[] }[] = [
 export const DEADLINE_STATUS: Record<DeadlineStatus, string> = {
   done: "Klar",
   you: "Väntar på dig",
-  truls: "Truls",
+  truls: "Patricia",
   planned: "Planerad",
 }
 
@@ -366,7 +366,7 @@ export type Flag = {
   id: string
   title: string
   detail: string
-  /** The question to Truls the flag pre-writes, if it has one. */
+  /** The question to Patricia the flag pre-writes, if it has one. */
   ask?: string
   /** The software flag opens a breakdown instead. */
   expands?: boolean
@@ -380,7 +380,7 @@ export const FLAGS: Flag[] = [
     title: "Inte nog till hyran 25 oktober",
     detail:
       "Lön och hyra förfaller båda 25 oktober. Efter lön står det 162 000 kr på företagskontot, och hyran är 184 000 kr. För över 25 000 kr från sparkontot före 25 oktober.",
-    ask: "Hej Truls! Kan du flytta 25 000 kr från sparkontot före hyran 25 oktober?",
+    ask: "Hej Patricia! Kan du flytta 25 000 kr från sparkontot före hyran 25 oktober?",
     bank: true,
   },
   {
@@ -396,11 +396,11 @@ export const FLAGS: Flag[] = [
 export type MonthReport = {
   id: string
   label: string
-  /** When Truls closed the month and wrote it up. */
+  /** When Patricia closed the month and wrote it up. */
   prepared: string
   /** The date the figures are per. */
   asOf: string
-  /** Truls' summary, two or three sentences. */
+  /** Patricia' summary, two or three sentences. */
   summary: string[]
   tiles: {
     label: string
@@ -438,7 +438,7 @@ export const MONTH_REPORTS: MonthReport[] = [
       {
         label: "Utestående",
         value: "412 000",
-        hint: "Truls följer upp",
+        hint: "Patricia följer upp",
         tone: "neutral",
       },
       {
@@ -650,7 +650,7 @@ export const BANK = {
 
 /** Answers from the books. Reads the question for a person, a vendor, a
     customer, a month or a subject, and answers from the same data the
-    page shows. What it can't find, it says so, and hands to Truls. */
+    page shows. What it can't find, it says so, and hands to Patricia. */
 export function askNumbers(question: string): string {
   const q = question.toLowerCase()
   const has = (...words: string[]) => words.some((w) => q.includes(w))
@@ -752,10 +752,10 @@ export function askNumbers(question: string): string {
   )
     return `Nästa datum: 23 oktober godkänn lön, 25 oktober lön betalas, 31 oktober oktober stängs, 12 november arbetsgivardeklaration och arbetsgivaravgifter 136 400 kr, 12 december momsdeklaration.`
   if (has("utdelning"))
-    return `Fritt eget kapital per september är 2,1 MSEK, så det finns utrymme för utdelning. Beloppet bestämmer ni, Truls tar fram styrelsebeslutet.`
+    return `Fritt eget kapital per september är 2,1 MSEK, så det finns utrymme för utdelning. Beloppet bestämmer ni, Patricia tar fram styrelsebeslutet.`
   if (has("kunder", "kund", "störst"))
     return `Ni har 14 aktiva kunder. Havsvik AB är störst med 2,9 MSEK hittills i år, sedan Brännö Consulting med 1,6 MSEK.`
-  return "Det hittade jag inte i siffrorna. Fråga Truls, så svarar han under dagen."
+  return "Det hittade jag inte i siffrorna. Fråga Patricia, så svarar hon under dagen."
 }
 
 // ── Insight: software costs ──
@@ -861,7 +861,7 @@ export const READ_STEPS = [
   "Föreslår konto och etikett",
 ]
 
-// ── Chat with Truls ──
+// ── Chat with Patricia ──
 
 export type Message = {
   id: string
@@ -897,7 +897,7 @@ export type Thread = {
   messages: Message[]
 }
 
-/** Every conversation with Truls, newest first. Resolved ones are kept:
+/** Every conversation with Patricia, newest first. Resolved ones are kept:
     what was asked and what was decided, for the next time it comes up. */
 export const THREADS: Thread[] = [
   {
@@ -995,7 +995,7 @@ export const LIVE_MESSAGE_SETTLED =
 export const LIVE_MESSAGE =
   "Hej Andrea! September är stängd. Omsättningen landade på 1 284 000 kr, 12 % upp från augusti, mest från två nya kunder. Lönen ökade 64 000 eftersom Nora började 1 september. Ska jag fördela Nordic Cloud-licensen över året?"
 
-/** Things people ask Truls, as one-tap starters in the chat. */
+/** Things people ask Patricia, as one-tap starters in the chat. */
 export const STARTERS = [
   "Hur mycket har vi lagt på programvara i år?",
   "Kan vi ta utdelning i december?",
@@ -1042,7 +1042,7 @@ export function relative(iso: string) {
   return `om ${d} dagar`
 }
 
-// ── Everything the model is given when it answers for Sanna or Truls ──
+// ── Everything the model is given when it answers for Sanna or Patricia ──
 
 /** The whole dummy ledger as one object, for the system prompt. */
 export function ledgerForModel() {

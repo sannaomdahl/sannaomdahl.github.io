@@ -4,12 +4,12 @@
 // accent, and as little text as the page can get away with. The customer
 // is Fjordlys Rådgivning AS, a consulting firm, seen by its daglig leder.
 //
-// Three panes. "Dina uppgifter" is a timeline: a box to send Truls a
+// Three panes. "Dina uppgifter" is a timeline: a box to send Patricia a
 // document (read on the spot), what waits on them (the one place a
-// primary button lives), what's done (greyed), what Truls is working on,
+// primary button lives), what's done (greyed), what Patricia is working on,
 // and what's locked until later. A task that is answered shows it being
 // sent, then moves down to the done list; a wrong document says so and
-// stays. "Meddelanden" holds every conversation: this month's with Truls,
+// stays. "Meddelanden" holds every conversation: this month's with Patricia,
 // Sanna (KI) for instant answers from the books, and the settled ones kept
 // for later. "Tallene dine" is the numbers, consulting-shaped: flags worth
 // a look, the year against its goal, booked against invoiced, billable
@@ -198,7 +198,7 @@ function CardLabel({
   )
 }
 
-function TrulsPhoto({ className }: { className?: string }) {
+function AccountantPhoto({ className }: { className?: string }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element -- static export, no image optimiser
     <img
@@ -271,7 +271,7 @@ function TopBar({ onChat }: { onChat: () => void }) {
           onClick={onChat}
           className="hover:bg-card focus-visible:ring-ring/50 -mr-2 flex items-center gap-2.5 rounded-full py-1 pr-3 pl-1 text-left text-sm transition-colors outline-none focus-visible:ring-[3px]"
         >
-          <TrulsPhoto className="size-8" />
+          <AccountantPhoto className="size-8" />
           <span className="flex flex-col leading-tight">
             <span className="text-foreground font-medium">
               <span className="max-sm:hidden">{ACCOUNTANT.name}</span>
@@ -294,7 +294,7 @@ function TopBar({ onChat }: { onChat: () => void }) {
 function Greeting({ open }: { open: number }) {
   const line =
     open === 0
-      ? "Oktober är klar. Truls tar det härifrån."
+      ? "Oktober är klar. Patricia tar det härifrån."
       : open === 1
         ? "Oktober är nästan klar. Du har en sak att göra."
         : `Oktober är nästan klar. Du har ${open} saker att göra.`
@@ -308,7 +308,7 @@ function Greeting({ open }: { open: number }) {
   )
 }
 
-// ── Send Truls a document: dropped here, read on the spot ──
+// ── Send Patricia a document: dropped here, read on the spot ──
 
 type Reading =
   | { stage: "idle" }
@@ -923,7 +923,7 @@ function TimelineCard({
   )
 }
 
-/** A task that is really a question from Truls: his photo, his words, the
+/** A task that is really a question from Patricia: his photo, his words, the
     answers as buttons, and a way to say something else about it. */
 function QuestionCard({
   todo,
@@ -949,7 +949,7 @@ function QuestionCard({
         </span>
       </div>
       <div className="flex items-start gap-3">
-        <TrulsPhoto />
+        <AccountantPhoto />
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <div className="bg-muted text-foreground rounded-2xl rounded-tl-md px-3.5 py-2.5 text-sm text-pretty">
             <span className="font-medium">{todo.title}.</span> {todo.detail}
@@ -1114,7 +1114,7 @@ function Timeline({
                 Inget väntar på dig
               </span>
               <span className="text-muted-foreground text-sm">
-                {ACCOUNTANT.first} stänger oktober 31 oktober. Du hör av honom
+                {ACCOUNTANT.first} stänger oktober 31 oktober. Du hör av henne
                 om något saknas.
               </span>
             </div>
@@ -1276,7 +1276,7 @@ function SoftwareLines() {
   )
 }
 
-/** The flags, written up as Truls' notes at the end of the report. */
+/** The flags, written up as Patricia' notes at the end of the report. */
 function Notes({ onAsk }: { onAsk: (text: string) => void }) {
   const { change } = softwareTotals()
   return (
@@ -1625,7 +1625,7 @@ function Kpis({
 
 // ── Meddelanden ──
 
-/** What Truls says back in the demo, keyed on what was asked. */
+/** What Patricia says back in the demo, keyed on what was asked. */
 function trulsReplies(text: string, asked: Message | undefined): string | null {
   const t = text.toLowerCase().trim()
   const question = asked?.from === "truls" && asked.text.trim().endsWith("?")
@@ -1711,7 +1711,7 @@ function Messages({
   settled: boolean
   /** A question pre-written by a flag; a new value lands in the composer. */
   prefill: { text: string; n: number } | null
-  /** "Ja" to Truls' question settles the matching task on the timeline. */
+  /** "Ja" to Patricia' question settles the matching task on the timeline. */
   onSettle: (todoId: string, what: string) => void
 }) {
   const [threads, setThreads] = useState<Thread[]>(THREADS)
@@ -1730,7 +1730,7 @@ function Messages({
       ? threads.find((t) => t.id === "sanna")
       : threads.find((t) => t.id === selected)
 
-  /** Truls or Sanna: who the pane talks to. */
+  /** Patricia or Sanna: who the pane talks to. */
   const toggle = (
     <div
       className="bg-muted flex rounded-lg p-0.5 text-xs font-medium"
@@ -1772,7 +1772,7 @@ function Messages({
       ),
     )
 
-  // The first visit: Truls is writing, and his message lands in this month's thread.
+  // The first visit: Patricia is writing, and his message lands in this month's thread.
   useEffect(() => {
     if (!active || arrived.current) return
     let cancelled = false
@@ -1925,7 +1925,7 @@ function Messages({
                     t.status === "resolved" && "opacity-70",
                   )}
                 >
-                  {ai ? <SannaMark /> : <TrulsPhoto />}
+                  {ai ? <SannaMark /> : <AccountantPhoto />}
                   <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                     <span className="flex items-center gap-2">
                       <span className="text-foreground truncate text-sm font-medium">
@@ -1940,7 +1940,7 @@ function Messages({
                     </span>
                     <span className="text-muted-foreground truncate text-xs">
                       {ai
-                        ? "Fråga om siffrorna, få svar direkt. Truls ser allt."
+                        ? "Fråga om siffrorna, få svar direkt. Patricia ser allt."
                         : last
                           ? `${last.from === "you" ? "Du: " : ""}${last.text}`
                           : null}
@@ -1987,7 +1987,7 @@ function Messages({
             <ArrowLeftIcon aria-hidden="true" />
           </Button>
         )}
-        {ai ? <SannaMark /> : <TrulsPhoto className="size-9" />}
+        {ai ? <SannaMark /> : <AccountantPhoto className="size-9" />}
         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
           <span className="text-foreground truncate text-[15px] font-medium">
             {thread.title}
@@ -2174,7 +2174,7 @@ export function KundDashboard({ className }: { className?: string }) {
     setDone((d) => (d[id] ? d : { ...d, [id]: what }))
     if (!quiet)
       toast.success(`Skickat till ${ACCOUNTANT.first}`, {
-        description: "Du hör av honom här om något mer behövs.",
+        description: "Du hör av henne här om något mer behövs.",
       })
   }
 
@@ -2366,7 +2366,7 @@ export function KundDashboard({ className }: { className?: string }) {
                           Siffror per {report.asOf}, från Fortnox
                         </span>
                       </div>
-                      <TrulsPhoto className="size-10 sm:order-first" />
+                      <AccountantPhoto className="size-10 sm:order-first" />
                     </div>
                   </div>
                   <ul className="flex flex-col gap-2.5">
