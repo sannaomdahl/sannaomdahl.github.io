@@ -760,8 +760,8 @@ function PayrollDialog({
         </table>
         <DialogFooter className="flex-row items-center justify-between gap-3 sm:justify-between">
           <span className="text-muted-foreground text-xs text-pretty">
-            Eksl. feriepenger, AGA og skattetrekk kommer i tillegg.{" "}
-            {ACCOUNTANT.first} tar seg av dette.
+            Exkl. semesterlön. Arbetsgivaravgifter och skatteavdrag tillkommer.{" "}
+            {ACCOUNTANT.first} sköter det.
           </span>
           <Button onClick={onApprove}>
             <CheckIcon data-icon="inline-start" aria-hidden="true" />
