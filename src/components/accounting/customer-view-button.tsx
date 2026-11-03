@@ -3,7 +3,11 @@
 // Opens the customer's side of the loop in a new tab. On a client's pages it
 // goes straight to that customer; elsewhere it asks which one.
 import { usePathname } from "next/navigation"
-import { ChevronDownIcon, ExternalLinkIcon, MonitorSmartphoneIcon } from "lucide-react"
+import {
+  ChevronDownIcon,
+  ExternalLinkIcon,
+  MonitorSmartphoneIcon,
+} from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -33,22 +37,39 @@ export function CustomerViewButton() {
     : undefined
   const client = clientId ? CLIENT_BY_ID.get(clientId) : undefined
   // A company onboarding sees its onboarding link, once the offer opens it.
-  const caseId = pathname.startsWith("/onboarding/") ? pathname.split("/")[2] : undefined
-  const onboarding = caseId ? state.onboarding.find((c) => c.id === caseId) : undefined
+  const caseId = pathname.startsWith("/onboarding/")
+    ? pathname.split("/")[2]
+    : undefined
+  const onboarding = caseId
+    ? state.onboarding.find((c) => c.id === caseId)
+    : undefined
 
   if (caseId) {
     return onboarding && hasCustomerLink(onboarding) ? (
       <Button
         variant="outline"
         nativeButton={false}
-        render={<a href={welcomeHref(caseId)} target="_blank" rel="noopener noreferrer" />}
+        render={
+          <a
+            href={welcomeHref(caseId)}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
+        }
       >
         <MonitorSmartphoneIcon data-icon="inline-start" aria-hidden="true" />
         Customer view
-        <ExternalLinkIcon className="text-muted-foreground" aria-hidden="true" />
+        <ExternalLinkIcon
+          className="text-muted-foreground"
+          aria-hidden="true"
+        />
       </Button>
     ) : (
-      <Button variant="outline" disabled title="Their page opens when the offer is sent">
+      <Button
+        variant="outline"
+        disabled
+        title="Their page opens when the offer is sent"
+      >
         <MonitorSmartphoneIcon data-icon="inline-start" aria-hidden="true" />
         Customer view
       </Button>
@@ -61,21 +82,29 @@ export function CustomerViewButton() {
         variant="outline"
         nativeButton={false}
         render={
-          <a href={portalHref(client.id)} target="_blank" rel="noopener noreferrer" />
+          <a
+            href={portalHref(client.id)}
+            target="_blank"
+            rel="noopener noreferrer"
+          />
         }
       >
         <MonitorSmartphoneIcon data-icon="inline-start" aria-hidden="true" />
         Customer view
-        <ExternalLinkIcon className="text-muted-foreground" aria-hidden="true" />
+        <ExternalLinkIcon
+          className="text-muted-foreground"
+          aria-hidden="true"
+        />
       </Button>
     )
   }
 
   // Customers with open tasks first: those are the portals worth looking at.
   const pending = (id: string) =>
-    state.requests.filter((r) => r.clientId === id && r.status === "sent").length
+    state.requests.filter((r) => r.clientId === id && r.status === "sent")
+      .length
   const clients = [...scopedClients("mine")].sort(
-    (a, b) => pending(b.id) - pending(a.id) || a.name.localeCompare(b.name)
+    (a, b) => pending(b.id) - pending(a.id) || a.name.localeCompare(b.name),
   )
 
   return (
@@ -92,7 +121,11 @@ export function CustomerViewButton() {
             <DropdownMenuItem
               key={c.id}
               render={
-                <a href={portalHref(c.id)} target="_blank" rel="noopener noreferrer" />
+                <a
+                  href={portalHref(c.id)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
               }
             >
               <span className="min-w-0 flex-1 truncate">{c.name}</span>
@@ -117,8 +150,28 @@ export function CustomerViewButton() {
               />
             }
           >
-            <span className="min-w-0 flex-1 truncate">Fjordlys Rådgivning AS</span>
-            <span className="text-muted-foreground text-xs">demo</span>
+            <span className="min-w-0 flex-1 truncate">
+              Fjordlys Rådgivning AS
+            </span>
+            <span className="text-muted-foreground text-xs">
+              Norge · Tripletex
+            </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            render={
+              <a
+                href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/kund`}
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+          >
+            <span className="min-w-0 flex-1 truncate">
+              Fjällsjö Rådgivning AB
+            </span>
+            <span className="text-muted-foreground text-xs">
+              Sverige · Fortnox
+            </span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
