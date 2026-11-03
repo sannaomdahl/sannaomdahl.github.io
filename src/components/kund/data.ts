@@ -892,7 +892,7 @@ export type Thread = {
   id: string
   title: string
   status: ThreadStatus
-  /** "I dag", "12. sep" */
+  /** "I dag", "12 sep" */
   updated: string
   messages: Message[]
 }
@@ -918,19 +918,19 @@ export const THREADS: Thread[] = [
     id: "firmabil",
     title: "Tjänstebil till Jonas",
     status: "open",
-    updated: "3. okt",
+    updated: "3 okt",
     messages: [
       {
         id: "f1",
         from: "you",
         text: "Jonas vill ha tjänstebil. Lönar det sig för oss?",
-        at: "3. okt 09:10",
+        at: "3 okt 09:10",
       },
       {
         id: "f2",
         from: "truls",
         text: "Sällan för en konsult som kör lite. Jag räknar på elbil mot milersättning och återkommer med siffror.",
-        at: "3. okt 11:42",
+        at: "3 okt 11:42",
       },
     ],
   },
@@ -938,20 +938,20 @@ export const THREADS: Thread[] = [
     id: "mva-aug",
     title: "Momsdeklaration juli–augusti",
     status: "resolved",
-    updated: "8. okt",
+    updated: "9 okt",
     messages: [
       {
         id: "m1",
         from: "truls",
         text: "Moms för juli–augusti: 318 400 kr att betala, förfaller 12 oktober. Underlaget ligger i Fortnox. Ok?",
-        at: "7. okt 15:02",
+        at: "7 okt 15:02",
       },
-      { id: "m2", from: "you", text: "Ja", at: "7. okt 15:30" },
+      { id: "m2", from: "you", text: "Ja", at: "7 okt 15:30" },
       {
         id: "m3",
         from: "truls",
         text: "Inlämnad. Betalningen går från företagskontot 12 oktober.",
-        at: "8. okt 08:15",
+        at: "8 okt 08:15",
       },
     ],
   },
@@ -959,26 +959,26 @@ export const THREADS: Thread[] = [
     id: "kapital",
     title: "Nyemission",
     status: "resolved",
-    updated: "12. sep",
+    updated: "12 sep",
     messages: [
       {
         id: "k1",
         from: "you",
         text: "Vi tar in 2 MSEK från en investerare i Q4. Vad behöver vi göra?",
-        at: "28. aug 10:20",
+        at: "28 aug 10:20",
       },
       {
         id: "k2",
         from: "truls",
         text: "Styrelsebeslut, bolagsstämmoprotokoll och anmälan till Bolagsverket. Jag tar fram utkasten, ni skriver under med BankID. Räkna med två veckor.",
-        at: "28. aug 13:05",
+        at: "28 aug 13:05",
       },
-      { id: "k3", from: "you", text: "Toppen, kör på.", at: "28. aug 13:20" },
+      { id: "k3", from: "you", text: "Toppen, kör på.", at: "28 aug 13:20" },
       {
         id: "k4",
         from: "truls",
         text: "Registrerat hos Bolagsverket i dag. Aktiekapitalet är uppdaterat i bokföringen.",
-        at: "12. sep 14:48",
+        at: "12 sep 14:48",
       },
     ],
   },
@@ -1027,7 +1027,7 @@ const shortDay = new Intl.DateTimeFormat("sv-SE", {
   month: "short",
 })
 
-/** "23. okt" */
+/** "23 okt" */
 export function dayLabel(iso: string) {
   return shortDay.format(new Date(`${iso}T00:00:00`)).replace(/\.$/, "")
 }

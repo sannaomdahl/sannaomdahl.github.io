@@ -301,7 +301,7 @@ function Greeting({ open }: { open: number }) {
   return (
     <div className="flex flex-col gap-2">
       <h1 className="text-foreground text-4xl font-medium tracking-[-0.03em] sm:text-5xl">
-        Hei {CONTACT.first}
+        Hej {CONTACT.first}
       </h1>
       <p className="text-muted-foreground text-lg text-pretty">{line}</p>
     </div>
@@ -667,8 +667,8 @@ function PayrollDialog({
             Lön för oktober
           </DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm">
-            7 ansatte · utbetales 25. oktober · {ACCOUNTANT.first} har sjekket
-            den mot september. Endre et tall om noe er feil.
+            7 anställda · betalas ut 25 oktober · {ACCOUNTANT.first} har stämt
+            av den mot september. Ändra en siffra om något är fel.
           </DialogDescription>
         </DialogHeader>
         <table className="w-full text-sm">
@@ -1500,7 +1500,7 @@ function Utilization({ className }: { className?: string }) {
             <li key={c.name} className="flex items-center gap-3 text-sm">
               <span className="text-foreground w-24 shrink-0 truncate sm:w-28">
                 {c.name === CONTACT.name
-                  ? `${CONTACT.first} (deg)`
+                  ? `${CONTACT.first} (du)`
                   : c.name.split(" ")[0]}
               </span>
               <span className="bg-muted relative h-2 flex-1 rounded-full">
@@ -1590,8 +1590,8 @@ function TopClients({ className }: { className?: string }) {
         })}
       </ul>
       <p className="text-muted-foreground text-xs text-pretty">
-        {fresh.length} nye kunder står for {mnok(freshSum)} i år. Tindra Helse
-        er den eneste som har gått ned.
+        {fresh.length} nya kunder står för {mnok(freshSum)} i år. Tindra Hälsa
+        är den enda som har gått ner.
       </p>
     </Card>
   )
