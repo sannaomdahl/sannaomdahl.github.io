@@ -1641,9 +1641,9 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   const question = asked?.from === "truls" && asked.text.trim().endsWith("?")
   if (question && asked.text === LIVE_MESSAGE) {
     return /^(ja|yes|japp|gärna)/.test(t)
-      ? "Toppen, då bokför jag den som extern representation. Skicka gärna namnen på deltagarna och syftet med middagen, det behövs för momsavdraget."
+      ? "Toppen, då bokför jag hela kostnaden i oktober. Uppgiften är borta från din lista."
       : /^nej/.test(t)
-        ? "Okej, då bokför jag den som intern representation. Skicka gärna namnen på deltagarna, det behövs för underlaget."
+        ? "Tack, då periodiserar jag kostnaden över de månader som arbetet avser. Skicka gärna perioden, så stämmer jag av den med leverantören."
         : null
   }
   if (question && /^(ja|japp|gärna)/.test(t)) return "Toppen, då gör jag det."
@@ -1717,7 +1717,7 @@ function Messages({
   onSettle,
 }: {
   active: boolean
-  /** The representation question was already answered on the timeline. */
+  /** The Nordic Consulting question was already answered on the timeline. */
   settled: boolean
   /** A question pre-written by a flag; a new value lands in the composer. */
   prefill: { text: string; n: number } | null
@@ -1864,7 +1864,7 @@ function Messages({
     if (settling)
       onSettle(
         "nordic-cloud",
-        /^nej/i.test(clean) ? "Intern, personal" : "Extern, med kund",
+        /^nej/i.test(clean) ? "Även kommande månader" : "Under oktober",
       )
     // He reads it first, then writes. His answer comes from the model
     // when there is one; the yes/no on his own question stays scripted so

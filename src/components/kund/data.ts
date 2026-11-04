@@ -83,12 +83,12 @@ export const TODOS: Todo[] = [
   {
     id: "nordic-cloud",
     kind: "choice",
-    title: "Restaurang Riche, 4 850 kr",
+    title: "Nordic Consulting AB, 96 000 kr",
     detail:
-      "Middag den 14 oktober, betald med företagskortet. Var det extern representation med kund eller intern med personal? Skriv gärna vilka som deltog och syftet, det krävs för avdraget.",
+      "Vi ser att fakturan från Nordic Consulting avser konsultarbete, men saknar uppgift om leveransperiod. Utfördes arbetet under oktober eller avser det även kommande månader?",
     due: "2026-10-28",
     holdsUp: "Oktober stängs 6 november",
-    options: ["Extern, med kund", "Intern, personal"],
+    options: ["Under oktober", "Även kommande månader"],
     action: "Välj",
   },
 ]
@@ -1021,13 +1021,13 @@ export const THREADS: Thread[] = [
 /** Where documents can come from, besides a drop. */
 export const SOURCES = ["Gmail", "Outlook", "Google Drive", "Claude", "ChatGPT"]
 
-/** The same, when the representation question was already answered on the timeline. */
+/** The same, when the Nordic Consulting question was already answered on the timeline. */
 export const LIVE_MESSAGE_SETTLED =
-  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Middagen på Restaurang Riche bokför jag enligt ditt svar."
+  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Fakturan från Nordic Consulting bokför jag enligt ditt svar."
 
 /** Lands when Meldinger is opened: September is closed, with one question. */
 export const LIVE_MESSAGE =
-  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. En fråga: var middagen på Restaurang Riche den 14 oktober, 4 850 kr, extern representation med kund?"
+  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. En fråga: fakturan från Nordic Consulting på 96 000 kr saknar leveransperiod. Utfördes allt arbete under oktober?"
 
 /** Things people ask Patricia, as one-tap starters in the chat. */
 export const STARTERS = [
