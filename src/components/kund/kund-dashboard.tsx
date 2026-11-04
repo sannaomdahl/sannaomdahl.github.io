@@ -101,7 +101,6 @@ import {
   READ_STEPS,
   relative,
   SOFTWARE,
-  softwareTotals,
   SOURCES,
   STARTERS,
   SUPPLIERS,
@@ -562,8 +561,8 @@ function UploadBox({
       <Textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="Vad är dokumentet? «Resa Andrea», «lunch med kund» …"
-        aria-label="Vad är dokumentet?"
+        placeholder="Beskrivning av dokumentet, t.ex. «Resa Andrea», «lunch med kund» …"
+        aria-label="Beskrivning av dokumentet"
         rows={2}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -779,10 +778,17 @@ type Tone = "done" | "focus" | "truls" | "next" | "sending"
 
 const TONE_LABEL: Record<Tone, string> = {
   done: "Slutförd",
-  focus: "Väntar på dig",
+  focus: "Att hantera",
   truls: `Hanteras av ${ACCOUNTANT.first}`,
   next: "Kommande",
   sending: "Skickar",
+}
+
+/** What a task asks of the customer, in Patricia's words. */
+const TODO_STATUS: Record<Todo["kind"], string> = {
+  approve: "För attest",
+  file: "Underlag saknas",
+  choice: "För ställningstagande",
 }
 
 /** The status line at the top of a timeline card, icon and label in one colour. */
@@ -939,7 +945,7 @@ function QuestionCard({
   return (
     <div className="bg-card shadow-stamp flex flex-col gap-3 rounded-2xl p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <StatusLine tone="focus" />
+        <StatusLine tone="focus" label={TODO_STATUS[todo.kind]} />
         <span className="text-muted-foreground text-xs">
           <span className="text-foreground font-medium">
             {relative(todo.due)}
@@ -1055,7 +1061,7 @@ function Timeline({
   const sent = TODOS.filter((t) => done[t.id])
   return (
     <ol className="border-border ml-2.5 flex flex-col border-l pl-8 sm:ml-3">
-      <Stop label="Väntar på dig" tone="focus">
+      <Stop label="Att hantera" tone="focus">
         {open.length ? (
           open.map((todo, i) => {
             const state = states[todo.id] ?? {}
@@ -1081,6 +1087,7 @@ function Timeline({
               <TimelineCard
                 key={todo.id}
                 tone="focus"
+                statusLabel={TODO_STATUS[todo.kind]}
                 title={todo.title}
                 detail={todo.detail}
                 error={state.error}
@@ -1114,7 +1121,7 @@ function Timeline({
                 Inget väntar på dig
               </span>
               <span className="text-muted-foreground text-sm">
-                {ACCOUNTANT.first} stänger oktober 31 oktober. Du hör av henne
+                {ACCOUNTANT.first} stänger oktober 6 november. Du hör av henne
                 om något saknas.
               </span>
             </div>
@@ -1264,13 +1271,15 @@ function SoftwareLines() {
       <li className="text-muted-foreground flex flex-wrap items-center gap-x-4 pt-1 text-xs">
         <span className="flex items-center gap-1.5">
           <span className="bg-chart-1 size-2 rounded-full" aria-hidden="true" />
-          September i år
+          September innevarande år
         </span>
         <span className="flex items-center gap-1.5">
           <span className="bg-chart-3 size-2 rounded-full" aria-hidden="true" />
-          September i fjol
+          September föregående år
         </span>
-        <span className="sm:ml-auto">Kr per månad, exkl. moms.</span>
+        <span className="sm:ml-auto">
+          Belopp i kr per månad, exklusive moms
+        </span>
       </li>
     </ul>
   )
@@ -1278,7 +1287,6 @@ function SoftwareLines() {
 
 /** The flags, written up as Patricia' notes at the end of the report. */
 function Notes({ onAsk }: { onAsk: (text: string) => void }) {
-  const { change } = softwareTotals()
   return (
     <Card>
       <CardLabel>Noteringar från {ACCOUNTANT.first}</CardLabel>
@@ -1289,11 +1297,7 @@ function Notes({ onAsk }: { onAsk: (text: string) => void }) {
               {i + 1}.
             </span>
             <div className="flex min-w-0 flex-col gap-1.5">
-              <span className="text-foreground font-medium">
-                {flag.expands
-                  ? `Programvara ökade ${Math.round(change * 100)} % från i fjol`
-                  : flag.title}
-              </span>
+              <span className="text-foreground font-medium">{flag.title}</span>
               <span className="text-muted-foreground text-pretty">
                 {flag.detail}
               </span>
@@ -1328,7 +1332,7 @@ function Notes({ onAsk }: { onAsk: (text: string) => void }) {
                         />
                       }
                     >
-                      Till banken
+                      Öppna banken
                       <ExternalLinkIcon
                         data-icon="inline-end"
                         className="text-muted-foreground"
@@ -1476,7 +1480,7 @@ function BookedChart({ className }: { className?: string }) {
           Fakturerat
         </span>
         <span className="text-muted-foreground sm:ml-auto">
-          Okt–dec är bokat, inte fakturerat ännu.
+          Okt–dec är bokat, men ännu inte fakturerat.
         </span>
       </div>
     </Card>
@@ -1591,7 +1595,7 @@ function TopClients({ className }: { className?: string }) {
       </ul>
       <p className="text-muted-foreground text-xs text-pretty">
         {fresh.length} nya kunder står för {mnok(freshSum)} i år. Tindra Hälsa
-        är den enda som har gått ner.
+        är den enda som sjunkit.
       </p>
     </Card>
   )
@@ -1631,7 +1635,7 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   const question = asked?.from === "truls" && asked.text.trim().endsWith("?")
   if (question && asked.text === LIVE_MESSAGE) {
     return /^(ja|yes|japp|gärna)/.test(t)
-      ? "Toppen, då fördelar jag den över 12 månader. Uppgiften är borta från din lista."
+      ? "Toppen, då periodiserar jag kostnaden över tolv månader. Uppgiften är borta från din lista."
       : /^nej/.test(t)
         ? "Okej, då tar jag allt i oktober. Uppgiften är borta från din lista."
         : null
@@ -1642,7 +1646,7 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
     return "Ja, jag flyttar 25 000 kr från sparkontot 24 oktober, så är hyran täckt. Vill du att jag flyttar 100 000 i stället, så att ni har lite luft i november?"
   if (t.includes("påminnelse"))
     return "Ja, jag skickar påminnelse till båda i dag. Havsvik får en vänlig eftersom de brukar betala sent, Brännö Consulting får standard. Ok?"
-  if (t.includes("programvara"))
+  if (t.includes("programvar"))
     return "184 300 kr hittills i år, 21 % mer än vid samma tid i fjol. De största posterna är Anthropic, Figma och OpenAI."
   if (t.includes("utdelning"))
     return "Ja, det finns utrymme. Fritt eget kapital per september är 2,1 MSEK. Säg hur mycket, så tar jag fram styrelsebeslutet."
@@ -1651,7 +1655,7 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   if (t.includes("bonus"))
     return "Skicka mig belopp per person, så lägger jag in det på novemberlönen."
   if (t.includes("tjänstebil") || t.includes("bil"))
-    return "Elbil för 450 000 kostar er runt 6 200 kr i månaden efter skatt. Milersättningen för Johan låg på 1 900 i snitt. Jag skulle låta bli."
+    return "Det beror bland annat på hur mycket Jonas kör i tjänsten och privat. Jag jämför kostnaden för en elbil som förmånsbil med att han använder egen bil och får milersättning, och återkommer med en sammanställning."
   return `Tack, ${CONTACT.first}! Jag tittar på det och svarar dig under dagen.`
 }
 
@@ -1854,7 +1858,7 @@ function Messages({
     if (settling)
       onSettle(
         "nordic-cloud",
-        /^nej/i.test(clean) ? "Allt i oktober" : "Fördela över året",
+        /^nej/i.test(clean) ? "Allt i oktober" : "Periodisera över året",
       )
     // He reads it first, then writes. His answer comes from the model
     // when there is one; the yes/no on his own question stays scripted so
@@ -2364,6 +2368,10 @@ export function KundDashboard({ className }: { className?: string }) {
                         </span>
                         <span className="text-muted-foreground">
                           Siffror per {report.asOf}, från Fortnox
+                        </span>
+                        <span className="text-muted-foreground">
+                          Räkenskapsår {FIRM.fiscalYear.start} –{" "}
+                          {FIRM.fiscalYear.end}
                         </span>
                       </div>
                       <AccountantPhoto className="size-10 sm:order-first" />

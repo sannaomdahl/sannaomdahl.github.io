@@ -11,7 +11,20 @@ export const FIRM = {
   name: "Fjällsjö Rådgivning AB",
   orgNo: "559123-4567",
   system: "Fortnox",
+  /** Räkenskapsår: differs per company, so the deadlines below follow it. */
+  fiscalYear: { start: "2026-01-01", end: "2026-12-31" },
 }
+
+/** The date a number of months after the fiscal year ends, as 2027-07-31. */
+function afterYearEnd(months: number) {
+  const end = new Date(`${FIRM.fiscalYear.end}T00:00:00`)
+  const d = new Date(end.getFullYear(), end.getMonth() + months + 1, 0)
+  const pad = (n: number) => String(n).padStart(2, "0")
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+/** Räkenskapsåret, as the year it ends in. */
+export const FISCAL_YEAR = FIRM.fiscalYear.end.slice(0, 4)
 
 export const CONTACT = {
   name: "Andrea Omdahl",
@@ -64,7 +77,7 @@ export const TODOS: Todo[] = [
     title: "Ladda upp fakturan från Proshop",
     detail: "7 472 kr betalt med kort 3 september · troligen kontorsutrustning",
     due: "2026-10-28",
-    holdsUp: "Vi stänger oktober 31 oktober",
+    holdsUp: "Oktober stängs 6 november",
     action: "Ladda upp",
   },
   {
@@ -72,10 +85,10 @@ export const TODOS: Todo[] = [
     kind: "choice",
     title: "Nordic Cloud AB, 48 000 kr",
     detail:
-      "Det är en årlig licens. Ska jag fördela den över 12 månader, eller bokföra allt i oktober?",
+      "Det är en årlig licens. Ska jag periodisera kostnaden över de tolv månader som licensen avser, eller bokföra allt i oktober?",
     due: "2026-10-28",
-    holdsUp: "Vi stänger oktober 31 oktober",
-    options: ["Fördela över året", "Allt i oktober"],
+    holdsUp: "Oktober stängs 6 november",
+    options: ["Periodisera över året", "Allt i oktober"],
     action: "Välj",
   },
 ]
@@ -95,9 +108,9 @@ export const DONE: {
   },
   {
     id: "mva-sep",
-    title: "Bekräftat momsunderlag för juli–augusti",
-    detail: "Inlämnad 12 oktober",
-    when: "9 okt",
+    title: "Bekräftat momsunderlag för juli–september",
+    detail: "Inlämnad · betalning 10 november",
+    when: "21 okt",
   },
 ]
 
@@ -109,9 +122,20 @@ export const UPCOMING: { id: string; title: string; detail: string }[] = [
     detail: "Öppnar 20 november",
   },
   {
+    id: "k10",
+    title: "K10 för delägare",
+    detail:
+      "Senast 2027-04-30, så att den kommer med i deklarationen kring 3 maj 2027",
+  },
+  {
     id: "arsregnskap",
-    title: "Skriv under årsredovisningen för 2025",
-    detail: "Patricia skickar den till Bolagsverket i januari",
+    title: `Skriv under årsredovisningen för ${FISCAL_YEAR}`,
+    detail: `Patricia skickar in den till Bolagsverket senast ${afterYearEnd(7)}`,
+  },
+  {
+    id: "inkomstdeklaration",
+    title: `Inkomstdeklaration ${FISCAL_YEAR}`,
+    detail: `Patricia skickar in den till Skatteverket senast ${afterYearEnd(7)}`,
   },
 ]
 
@@ -120,7 +144,7 @@ export const WITH_TRULS: { id: string; title: string; detail: string }[] = [
   {
     id: "kvitteringer",
     title: "Kvitton för oktober bokförs",
-    detail: "128 av 129 · det sista väntar på dig",
+    detail: "128 av 129 · det sista är fakturan från Proshop under Att hantera",
   },
 ]
 
@@ -205,7 +229,7 @@ export type StatusLine = {
 export const STATUS: StatusLine[] = [
   { label: "Kvitton bokförda", value: "128 av 129", done: false },
   { label: "Bank avstämd", value: "Klar", done: true },
-  { label: "Momsdeklaration", value: "Inlämnad 12 okt", done: true },
+  { label: "Momsdeklaration", value: "Inlämnad 21 okt", done: true },
   { label: "Lönekörning", value: "Väntar på dig", done: false },
 ]
 
@@ -328,10 +352,14 @@ export const DEADLINES: { month: string; items: Deadline[] }[] = [
   {
     month: "Oktober",
     items: [
-      { date: "2026-10-12", label: "Momsdeklaration", status: "done" },
+      {
+        date: "2026-11-12",
+        label: "Momsdeklaration juli–september",
+        status: "done",
+      },
       { date: "2026-10-23", label: "Godkänn lön", status: "you" },
       { date: "2026-10-25", label: "Lön betalas", status: "truls" },
-      { date: "2026-10-31", label: "Oktober stängs", status: "truls" },
+      { date: "2026-11-06", label: "Oktober stängs", status: "truls" },
     ],
   },
   {
@@ -377,16 +405,17 @@ export type Flag = {
 export const FLAGS: Flag[] = [
   {
     id: "likviditet",
-    title: "Inte nog till hyran 25 oktober",
+    title: "Överföring behövs inför hyresbetalningen den 25 oktober",
     detail:
-      "Lön och hyra förfaller båda 25 oktober. Efter lön står det 162 000 kr på företagskontot, och hyran är 184 000 kr. För över 25 000 kr från sparkontot före 25 oktober.",
+      "Lönerna och hyran ska betalas den 25 oktober. Efter löneutbetalningen beräknas saldot på företagskontot uppgå till 162 000 kr. Hyran uppgår till 184 000 kr. För över 25 000 kr från sparkontot till företagskontot före betalningsdagen för att täcka hyran och ha en mindre marginal.",
     ask: "Hej Patricia! Kan du flytta 25 000 kr från sparkontot före hyran 25 oktober?",
     bank: true,
   },
   {
     id: "programvare",
-    title: "Programvara ökade 20 % från i fjol",
-    detail: "38 300 kr i september, 6 400 kr mer än i fjol. I huvudsak Claude.",
+    title: "Programvarukostnaderna ökade med 20 % jämfört med föregående år",
+    detail:
+      "Programvarukostnaderna för september uppgick till 38 300 kr, en ökning med 6 400 kr jämfört med september föregående år. Ökningen beror främst på högre kostnader för Claude.",
     expands: true,
   },
 ]
@@ -418,9 +447,9 @@ export const MONTH_REPORTS: MonthReport[] = [
     prepared: "8 oktober 2026",
     asOf: "30 september 2026",
     summary: [
-      "Omsättningen landade på 1 284 000 kr, 12 % högre än i augusti. Ökningen kommer från två nya kunder, Norrvik Energi och Solberg Bygg.",
-      "Lönekostnaderna ökade med 64 000 kr eftersom Nora började 1 september. Resultatet blev 318 000 kr, 25 % marginal.",
-      "Programvara har ökat 20 % från i fjol, i huvudsak Claude.",
+      "Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst hänförlig till två nya kunder, Norrvik Energi och Solberg Bygg.",
+      "Lönekostnaderna ökade med 64 000 kr till följd av att Nora började sin anställning i september. Månadens resultat uppgick till 318 000 kr, vilket motsvarar en resultatmarginal på cirka 25 %.",
+      "Programvarukostnaderna ökade med 20 % jämfört med samma period föregående år, främst till följd av kostnader för Claude.",
     ],
     tiles: [
       {
@@ -607,7 +636,7 @@ export const TOP_CLIENTS: TopClient[] = [
 // ── Spør tallene: instant answers from the books ──
 
 export const AI_STARTERS = [
-  "Hur mycket har vi lagt på programvara i år?",
+  "Hur stora har våra programvarukostnader varit hittills i år?",
   "Vad står det på kontot nu?",
   "Vem är skyldig oss mest?",
 ]
@@ -712,7 +741,7 @@ export function askNumbers(question: string): string {
 
   if (has("hur många anställda", "antal anställda", "anställda har"))
     return `7 anställda: du och 6 konsulter. Amalie började 6 oktober, Henrik är 50 % sjukskriven.`
-  if (has("programvara", "software", "verktyg", "licens")) {
+  if (has("programvar", "software", "verktyg", "licens")) {
     const { sep, change } = softwareTotals()
     const top = [...SOFTWARE].sort((a, b) => b.sep - a.sep).slice(0, 3)
     return `${kr(sep)} kr i september, ${Math.round(change * 100)} % mer än i augusti. Störst är ${top.map((l) => `${l.name} ${kr(l.sep)}`).join(", ")}. Hittills i år: 184 300 kr.`
@@ -750,7 +779,7 @@ export function askNumbers(question: string): string {
       "skatt",
     )
   )
-    return `Nästa datum: 23 oktober godkänn lön, 25 oktober lön betalas, 31 oktober oktober stängs, 12 november arbetsgivardeklaration och arbetsgivaravgifter 136 400 kr, 12 december momsdeklaration.`
+    return `Nästa datum: 23 oktober godkänn lön, 25 oktober lön och hyra betalas, 6 november oktober stängs, 10 november betalning av moms för juli–september (318 400 kr, Skatteverket tillhanda 12 november), 12 november arbetsgivardeklaration och arbetsgivaravgifter 136 400 kr.`
   if (has("utdelning"))
     return `Fritt eget kapital per september är 2,1 MSEK, så det finns utrymme för utdelning. Beloppet bestämmer ni, Patricia tar fram styrelsebeslutet.`
   if (has("kunder", "kund", "störst"))
@@ -875,13 +904,13 @@ export const CHAT: Message[] = [
   {
     id: "m1",
     from: "you",
-    text: "Hej! Kan vi köra bonus med lönen i november?",
+    text: "Hej! Kan vi betala ut bonus i samband med novemberlönen?",
     at: "Måndag 14:02",
   },
   {
     id: "m2",
     from: "truls",
-    text: "Ja, det fixar vi. Skicka mig beloppen, så tar jag med det.",
+    text: "Absolut! Skicka bonusbeloppet för respektive anställd, så tar jag med det i lönekörningen för november.",
     at: "Måndag 14:20",
   },
 ]
@@ -929,29 +958,29 @@ export const THREADS: Thread[] = [
       {
         id: "f2",
         from: "truls",
-        text: "Sällan för en konsult som kör lite. Jag räknar på elbil mot milersättning och återkommer med siffror.",
+        text: "Det beror bland annat på hur mycket Jonas kör i tjänsten och privat. Jag jämför kostnaden för en elbil som förmånsbil med alternativet att han använder egen bil och får milersättning för tjänsteresor. Jag återkommer med en sammanställning.",
         at: "3 okt 11:42",
       },
     ],
   },
   {
     id: "mva-aug",
-    title: "Momsdeklaration juli–augusti",
+    title: "Momsdeklaration juli–september",
     status: "resolved",
-    updated: "9 okt",
+    updated: "21 okt",
     messages: [
       {
         id: "m1",
         from: "truls",
-        text: "Moms för juli–augusti: 318 400 kr att betala, förfaller 12 oktober. Underlaget ligger i Fortnox. Ok?",
-        at: "7 okt 15:02",
+        text: "Moms för juli–september: 318 400 kr att betala, Skatteverket tillhanda senast 12 november. Betalning bör ske 10 november. Underlaget samt betalfilen ligger i Fortnox samt banken för din attest.",
+        at: "20 okt 15:02",
       },
-      { id: "m2", from: "you", text: "Ja", at: "7 okt 15:30" },
+      { id: "m2", from: "you", text: "Attesterat.", at: "20 okt 15:30" },
       {
         id: "m3",
         from: "truls",
-        text: "Inlämnad. Betalningen går från företagskontot 12 oktober.",
-        at: "8 okt 08:15",
+        text: "Inlämnad. Betalningen går från företagskontot 10 november.",
+        at: "21 okt 08:15",
       },
     ],
   },
@@ -970,14 +999,19 @@ export const THREADS: Thread[] = [
       {
         id: "k2",
         from: "truls",
-        text: "Styrelsebeslut, bolagsstämmoprotokoll och anmälan till Bolagsverket. Jag tar fram utkasten, ni skriver under med BankID. Räkna med två veckor.",
+        text: "Det beror på hur investeringen genomförs, eftersom dokumentationen skiljer sig åt. Om ni inte redan får hjälp med handlingarna från en tredje part har vi mallar som vi gärna delar med er.",
         at: "28 aug 13:05",
       },
-      { id: "k3", from: "you", text: "Toppen, kör på.", at: "28 aug 13:20" },
+      {
+        id: "k3",
+        from: "you",
+        text: "Toppen, jag återkommer med dokumentationen till dig.",
+        at: "28 aug 13:20",
+      },
       {
         id: "k4",
         from: "truls",
-        text: "Registrerat hos Bolagsverket i dag. Aktiekapitalet är uppdaterat i bokföringen.",
+        text: "Nu är nyemissionen bokförd och uppdaterad i böckerna.",
         at: "12 sep 14:48",
       },
     ],
@@ -989,17 +1023,17 @@ export const SOURCES = ["Gmail", "Outlook", "Google Drive", "Claude", "ChatGPT"]
 
 /** The same, when the Nordic Cloud question was already answered on the timeline. */
 export const LIVE_MESSAGE_SETTLED =
-  "Hej Andrea! September är stängd. Omsättningen landade på 1 284 000 kr, 12 % upp från augusti, mest från två nya kunder. Lönen ökade 64 000 eftersom Nora började 1 september. Nordic Cloud-licensen tar jag som du svarade."
+  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Nordic Cloud-licensen hanterar jag enligt ditt svar."
 
 /** Lands when Meldinger is opened: September is closed, with one question. */
 export const LIVE_MESSAGE =
-  "Hej Andrea! September är stängd. Omsättningen landade på 1 284 000 kr, 12 % upp från augusti, mest från två nya kunder. Lönen ökade 64 000 eftersom Nora började 1 september. Ska jag fördela Nordic Cloud-licensen över året?"
+  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Ska jag periodisera kostnaden för Nordic Cloud-licensen över de tolv månader som licensen avser?"
 
 /** Things people ask Patricia, as one-tap starters in the chat. */
 export const STARTERS = [
-  "Hur mycket har vi lagt på programvara i år?",
-  "Kan vi ta utdelning i december?",
-  "Vad kostar en ny konsult oss per månad?",
+  "Hur stora har våra programvarukostnader varit hittills i år?",
+  "Finns det utrymme för utdelning i december?",
+  "Vad blir den totala månadskostnaden för att anställa en konsult?",
 ]
 
 // ── Formatting ──
