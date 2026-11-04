@@ -661,7 +661,7 @@ function PayrollDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sanna bg-card text-foreground gap-5 rounded-2xl p-6 sm:max-w-2xl">
+      <DialogContent className="sanna bg-card text-foreground gap-5 rounded-2xl p-6 sm:max-w-3xl">
         <DialogHeader className="gap-1">
           <DialogTitle className="text-foreground text-lg font-medium tracking-tight">
             Lønn for oktober
@@ -671,7 +671,13 @@ function PayrollDialog({
             den mot september. Endre et tall om noe er feil.
           </DialogDescription>
         </DialogHeader>
-        <table className="w-full text-sm">
+        <table className="w-full table-fixed text-sm">
+          <colgroup>
+            <col />
+            <col className="w-28" />
+            <col className="w-28" />
+            <col className="w-24" />
+          </colgroup>
           <caption className="sr-only">Lønn per ansatt, oktober 2026</caption>
           <thead>
             <tr className="text-muted-foreground text-xs">

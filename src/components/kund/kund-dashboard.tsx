@@ -660,7 +660,7 @@ function PayrollDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sanna bg-card text-foreground gap-5 rounded-2xl p-6 sm:max-w-2xl">
+      <DialogContent className="sanna bg-card text-foreground gap-5 rounded-2xl p-6 sm:max-w-3xl">
         <DialogHeader className="gap-1">
           <DialogTitle className="text-foreground text-lg font-medium tracking-tight">
             Lön för oktober
@@ -670,7 +670,13 @@ function PayrollDialog({
             av den mot september. Ändra en siffra om något är fel.
           </DialogDescription>
         </DialogHeader>
-        <table className="w-full text-sm">
+        <table className="w-full table-fixed text-sm">
+          <colgroup>
+            <col />
+            <col className="w-28" />
+            <col className="w-28" />
+            <col className="w-24" />
+          </colgroup>
           <caption className="sr-only">Lön per anställd, oktober 2026</caption>
           <thead>
             <tr className="text-muted-foreground text-xs">
@@ -1635,9 +1641,9 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   const question = asked?.from === "truls" && asked.text.trim().endsWith("?")
   if (question && asked.text === LIVE_MESSAGE) {
     return /^(ja|yes|japp|gärna)/.test(t)
-      ? "Toppen, då periodiserar jag kostnaden över tolv månader. Uppgiften är borta från din lista."
+      ? "Toppen, då bokför jag den som extern representation. Skicka gärna namnen på deltagarna och syftet med middagen, det behövs för momsavdraget."
       : /^nej/.test(t)
-        ? "Okej, då tar jag allt i oktober. Uppgiften är borta från din lista."
+        ? "Okej, då bokför jag den som intern representation. Skicka gärna namnen på deltagarna, det behövs för underlaget."
         : null
   }
   if (question && /^(ja|japp|gärna)/.test(t)) return "Toppen, då gör jag det."
@@ -1711,7 +1717,7 @@ function Messages({
   onSettle,
 }: {
   active: boolean
-  /** The Nordic Cloud question was already answered on the timeline. */
+  /** The representation question was already answered on the timeline. */
   settled: boolean
   /** A question pre-written by a flag; a new value lands in the composer. */
   prefill: { text: string; n: number } | null
@@ -1858,7 +1864,7 @@ function Messages({
     if (settling)
       onSettle(
         "nordic-cloud",
-        /^nej/i.test(clean) ? "Allt i oktober" : "Periodisera över året",
+        /^nej/i.test(clean) ? "Intern, personal" : "Extern, med kund",
       )
     // He reads it first, then writes. His answer comes from the model
     // when there is one; the yes/no on his own question stays scripted so

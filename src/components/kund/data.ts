@@ -83,12 +83,12 @@ export const TODOS: Todo[] = [
   {
     id: "nordic-cloud",
     kind: "choice",
-    title: "Nordic Cloud AB, 48 000 kr",
+    title: "Restaurang Riche, 4 850 kr",
     detail:
-      "Det är en årlig licens. Ska jag periodisera kostnaden över de tolv månader som licensen avser, eller bokföra allt i oktober?",
+      "Middag den 14 oktober, betald med företagskortet. Var det extern representation med kund eller intern med personal? Skriv gärna vilka som deltog och syftet, det krävs för avdraget.",
     due: "2026-10-28",
     holdsUp: "Oktober stängs 6 november",
-    options: ["Periodisera över året", "Allt i oktober"],
+    options: ["Extern, med kund", "Intern, personal"],
     action: "Välj",
   },
 ]
@@ -1021,13 +1021,13 @@ export const THREADS: Thread[] = [
 /** Where documents can come from, besides a drop. */
 export const SOURCES = ["Gmail", "Outlook", "Google Drive", "Claude", "ChatGPT"]
 
-/** The same, when the Nordic Cloud question was already answered on the timeline. */
+/** The same, when the representation question was already answered on the timeline. */
 export const LIVE_MESSAGE_SETTLED =
-  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Nordic Cloud-licensen hanterar jag enligt ditt svar."
+  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Middagen på Restaurang Riche bokför jag enligt ditt svar."
 
 /** Lands when Meldinger is opened: September is closed, with one question. */
 export const LIVE_MESSAGE =
-  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. Ska jag periodisera kostnaden för Nordic Cloud-licensen över de tolv månader som licensen avser?"
+  "Hej Andrea! Månadsbokslutet för september är klart. Omsättningen uppgick till 1 284 000 kr, en ökning med 12 % jämfört med augusti, främst tack vare två nya kunder. Lönekostnaderna ökade med 64 000 kr eftersom Nora började sin anställning i september. En fråga: var middagen på Restaurang Riche den 14 oktober, 4 850 kr, extern representation med kund?"
 
 /** Things people ask Patricia, as one-tap starters in the chat. */
 export const STARTERS = [
