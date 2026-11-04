@@ -11,7 +11,34 @@ export const FIRM = {
   name: "Fjordlys Rådgivning AS",
   orgNo: "927 318 455",
   system: "Tripletex",
+  /** Regnskapsår: differs per company, so the deadlines below follow it. */
+  fiscalYear: { start: "2026-01-01", end: "2026-12-31" },
 }
+
+const MONTHS_LONG = [
+  "januar",
+  "februar",
+  "mars",
+  "april",
+  "mai",
+  "juni",
+  "juli",
+  "august",
+  "september",
+  "oktober",
+  "november",
+  "desember",
+]
+
+/** The last day of the month a number of months after year end, as «31. juli 2027». */
+function afterYearEnd(months: number) {
+  const end = new Date(`${FIRM.fiscalYear.end}T00:00:00`)
+  const d = new Date(end.getFullYear(), end.getMonth() + months + 1, 0)
+  return `${d.getDate()}. ${MONTHS_LONG[d.getMonth()]} ${d.getFullYear()}`
+}
+
+/** Regnskapsåret, as the year it ends in. */
+export const FISCAL_YEAR = FIRM.fiscalYear.end.slice(0, 4)
 
 export const CONTACT = {
   name: "Andrea Omdahl",
@@ -64,18 +91,18 @@ export const TODOS: Todo[] = [
     title: "Last opp fakturaen fra Proshop",
     detail: "7 472 kr betalt med kort 3. september · trolig kontorutstyr",
     due: "2026-10-28",
-    holdsUp: "Vi lukker oktober 31. oktober",
+    holdsUp: "Oktober lukkes 6. november",
     action: "Last opp",
   },
   {
     id: "nordic-cloud",
     kind: "choice",
-    title: "Nordic Cloud AS, 48 000 kr",
+    title: "Restaurant Kontrast, 4 850 kr",
     detail:
-      "Det er en årlig lisens. Skal jeg fordele den over 12 måneder, eller bokføre alt i oktober?",
+      "Middag 14. oktober, betalt med firmakortet. Var det representasjon med kunde, eller internt med ansatte? Skriv gjerne hvem som deltok og formålet, det må stå på bilaget.",
     due: "2026-10-28",
-    holdsUp: "Vi lukker oktober 31. oktober",
-    options: ["Fordel over året", "Alt i oktober"],
+    holdsUp: "Oktober lukkes 6. november",
+    options: ["Med kunde", "Internt, ansatte"],
     action: "Velg",
   },
 ]
@@ -109,9 +136,19 @@ export const UPCOMING: { id: string; title: string; detail: string }[] = [
     detail: "Åpner 20. november",
   },
   {
+    id: "aksjonaer",
+    title: `Aksjonærregisteroppgave for ${FISCAL_YEAR}`,
+    detail: `Truls sender den til Skatteetaten senest ${afterYearEnd(1)}`,
+  },
+  {
+    id: "skattemelding",
+    title: `Skattemelding for ${FISCAL_YEAR}`,
+    detail: `Truls sender den til Skatteetaten senest ${afterYearEnd(5)}`,
+  },
+  {
     id: "arsregnskap",
-    title: "Signer årsregnskap for 2025",
-    detail: "Truls sender det i Altinn i januar",
+    title: `Signer årsregnskapet for ${FISCAL_YEAR}`,
+    detail: `Truls sender det til Brønnøysundregistrene senest ${afterYearEnd(7)}`,
   },
 ]
 
@@ -120,7 +157,8 @@ export const WITH_TRULS: { id: string; title: string; detail: string }[] = [
   {
     id: "kvitteringer",
     title: "Kvitteringer for oktober bokføres",
-    detail: "128 av 129 · den siste venter på deg",
+    detail:
+      "128 av 129 · den siste er fakturaen fra Proshop under Venter på deg",
   },
 ]
 
@@ -331,7 +369,7 @@ export const DEADLINES: { month: string; items: Deadline[] }[] = [
       { date: "2026-10-10", label: "MVA-melding", status: "done" },
       { date: "2026-10-23", label: "Godkjenn lønn", status: "you" },
       { date: "2026-10-25", label: "Lønn betales", status: "truls" },
-      { date: "2026-10-31", label: "Oktober lukkes", status: "truls" },
+      { date: "2026-11-06", label: "Oktober lukkes", status: "truls" },
     ],
   },
   {
@@ -604,7 +642,7 @@ export const TOP_CLIENTS: TopClient[] = [
 // ── Spør tallene: instant answers from the books ──
 
 export const AI_STARTERS = [
-  "Hvor mye har vi brukt på programvare i år?",
+  "Hvor store har programvarekostnadene våre vært hittil i år?",
   "Hva står det på konto nå?",
   "Hvem skylder oss mest?",
 ]
@@ -747,7 +785,7 @@ export function askNumbers(question: string): string {
       "skatt",
     )
   )
-    return `Neste frister: 23. oktober godkjenn lønn, 25. oktober lønn betales, 31. oktober oktober lukkes, 5. november a-melding, 16. november arbeidsgiveravgift 136 400 kr, 10. desember MVA-melding.`
+    return `Neste frister: 23. oktober godkjenn lønn, 25. oktober lønn betales, 6. november oktober lukkes, 5. november a-melding, 16. november arbeidsgiveravgift 136 400 kr, 10. desember MVA-melding.`
   if (has("utbytte"))
     return `Fri egenkapital per september er 2,1 MNOK, så det er rom for utbytte. Beløpet bestemmer dere, Truls lager styrevedtaket.`
   if (has("kunder", "kunde"))
@@ -872,13 +910,13 @@ export const CHAT: Message[] = [
   {
     id: "m1",
     from: "you",
-    text: "Hei! Kan vi kjøre bonus med lønn i november?",
+    text: "Hei! Kan vi betale ut bonus sammen med novemberlønnen?",
     at: "Mandag 14:02",
   },
   {
     id: "m2",
     from: "truls",
-    text: "Ja, det fikser vi. Send meg beløpene, så tar jeg det med.",
+    text: "Absolutt! Send meg bonusbeløpet for hver ansatt, så tar jeg det med i lønnskjøringen for november.",
     at: "Mandag 14:20",
   },
 ]
@@ -926,7 +964,7 @@ export const THREADS: Thread[] = [
       {
         id: "f2",
         from: "truls",
-        text: "Sjelden for en konsulent som kjører lite. Jeg regner på elbil mot kjøregodtgjørelse og kommer tilbake med tall.",
+        text: "Det kommer blant annet an på hvor mye Jonas kjører i jobb og privat. Jeg sammenligner kostnaden for en elbil som firmabil med at han bruker egen bil og får kilometergodtgjørelse for jobbreiser. Jeg kommer tilbake med en oversikt.",
         at: "3. okt 11:42",
       },
     ],
@@ -940,10 +978,10 @@ export const THREADS: Thread[] = [
       {
         id: "m1",
         from: "truls",
-        text: "MVA for juli–august: 318 400 kr å betale, forfall 10. oktober. Grunnlaget ligger i Tripletex. Ok?",
+        text: "MVA for juli–august: 318 400 kr å betale, frist 10. oktober. Grunnlaget ligger i Tripletex, og betalingen ligger i nettbanken til din godkjenning.",
         at: "7. okt 15:02",
       },
-      { id: "m2", from: "you", text: "Ja", at: "7. okt 15:30" },
+      { id: "m2", from: "you", text: "Godkjent.", at: "7. okt 15:30" },
       {
         id: "m3",
         from: "truls",
@@ -967,14 +1005,19 @@ export const THREADS: Thread[] = [
       {
         id: "k2",
         from: "truls",
-        text: "Styrevedtak, generalforsamlingsprotokoll og melding til Foretaksregisteret. Jeg lager utkastene, dere signerer i Altinn. Regn med to uker.",
+        text: "Det kommer an på hvordan investeringen gjennomføres, siden dokumentasjonen er ulik. Hvis dere ikke allerede får hjelp med dokumentene fra en tredjepart, har vi maler vi gjerne deler med dere.",
         at: "28. aug 13:05",
       },
-      { id: "k3", from: "you", text: "Supert, kjør på.", at: "28. aug 13:20" },
+      {
+        id: "k3",
+        from: "you",
+        text: "Supert, jeg kommer tilbake med dokumentasjonen til deg.",
+        at: "28. aug 13:20",
+      },
       {
         id: "k4",
         from: "truls",
-        text: "Registrert i Brønnøysund i dag. Aksjekapitalen er oppdatert i regnskapet.",
+        text: "Nå er kapitalforhøyelsen bokført og oppdatert i regnskapet.",
         at: "12. sep 14:48",
       },
     ],
@@ -984,19 +1027,19 @@ export const THREADS: Thread[] = [
 /** Where documents can come from, besides a drop. */
 export const SOURCES = ["Gmail", "Outlook", "Google Drive", "Claude", "ChatGPT"]
 
-/** The same, when the Nordic Cloud question was already answered on the timeline. */
+/** The same, when the representation question was already answered on the timeline. */
 export const LIVE_MESSAGE_SETTLED =
-  "Hei Andrea! September er lukket. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønn økte 64 000 fordi Nora startet 1. september. Nordic Cloud-lisensen tar jeg slik du svarte."
+  "Hei Andrea! Månedsavslutningen for september er klar. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønnskostnadene økte med 64 000 kr fordi Nora startet 1. september. Middagen på Restaurant Kontrast fører jeg slik du svarte."
 
 /** Lands when Meldinger is opened: September is closed, with one question. */
 export const LIVE_MESSAGE =
-  "Hei Andrea! September er lukket. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønn økte 64 000 fordi Nora startet 1. september. Skal jeg fordele Nordic Cloud-lisensen over året?"
+  "Hei Andrea! Månedsavslutningen for september er klar. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønnskostnadene økte med 64 000 kr fordi Nora startet 1. september. Ett spørsmål: var middagen på Restaurant Kontrast 14. oktober, 4 850 kr, representasjon med kunde?"
 
 /** Things people ask Truls, as one-tap starters in the chat. */
 export const STARTERS = [
-  "Hvor mye har vi brukt på programvare i år?",
-  "Kan vi ta ut utbytte i desember?",
-  "Hva koster en ny konsulent oss per måned?",
+  "Hvor store har programvarekostnadene våre vært hittil i år?",
+  "Er det rom for utbytte i desember?",
+  "Hva blir den totale månedskostnaden for å ansette en konsulent?",
 ]
 
 // ── Formatting ──

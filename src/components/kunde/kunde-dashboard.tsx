@@ -562,8 +562,8 @@ function UploadBox({
       <Textarea
         value={note}
         onChange={(e) => setNote(e.target.value)}
-        placeholder="Hva er dokumentet? «Reise Andrea», «lunsj med kunde» …"
-        aria-label="Hva er dokumentet?"
+        placeholder="Beskrivelse av dokumentet, f.eks. «Reise Andrea», «lunsj med kunde» …"
+        aria-label="Beskrivelse av dokumentet"
         rows={2}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -791,6 +791,13 @@ const TONE_LABEL: Record<Tone, string> = {
   sending: "Sender",
 }
 
+/** What a task asks of the customer. */
+const TODO_STATUS: Record<Todo["kind"], string> = {
+  approve: "Til godkjenning",
+  file: "Bilag mangler",
+  choice: "Til avklaring",
+}
+
 /** The status line at the top of a timeline card, icon and label in one colour. */
 function StatusLine({ tone, label }: { tone: Tone; label?: string }) {
   return (
@@ -945,7 +952,7 @@ function QuestionCard({
   return (
     <div className="bg-card shadow-stamp flex flex-col gap-3 rounded-2xl p-4 sm:p-5">
       <div className="flex items-center justify-between gap-3">
-        <StatusLine tone="focus" />
+        <StatusLine tone="focus" label={TODO_STATUS[todo.kind]} />
         <span className="text-muted-foreground text-xs">
           <span className="text-foreground font-medium">
             {relative(todo.due)}
@@ -1087,6 +1094,7 @@ function Timeline({
               <TimelineCard
                 key={todo.id}
                 tone="focus"
+                statusLabel={TODO_STATUS[todo.kind]}
                 title={todo.title}
                 detail={todo.detail}
                 error={state.error}
@@ -1120,7 +1128,7 @@ function Timeline({
                 Ingenting venter på deg
               </span>
               <span className="text-muted-foreground text-sm">
-                {ACCOUNTANT.first} lukker oktober 31. oktober. Du hører fra ham
+                {ACCOUNTANT.first} lukker oktober 6. november. Du hører fra ham
                 om noe mangler.
               </span>
             </div>
@@ -1482,7 +1490,7 @@ function BookedChart({ className }: { className?: string }) {
           Fakturert
         </span>
         <span className="text-muted-foreground sm:ml-auto">
-          Okt–des er booket, ikke fakturert ennå.
+          Okt–des er booket, men ikke fakturert ennå.
         </span>
       </div>
     </Card>
@@ -1637,9 +1645,9 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   const question = asked?.from === "truls" && asked.text.trim().endsWith("?")
   if (question && asked.text === LIVE_MESSAGE) {
     return /^(ja|yes|jepp|gjerne)/.test(t)
-      ? "Supert, da fordeler jeg den over 12 måneder. Oppgaven er ute av listen din."
+      ? "Supert, da fører jeg den som representasjon. Send meg gjerne navnene på de som deltok og formålet, det må stå på bilaget."
       : /^nei/.test(t)
-        ? "Greit, da tar jeg alt i oktober. Oppgaven er ute av listen din."
+        ? "Greit, da fører jeg den som intern bevertning. Send meg gjerne navnene på de som deltok."
         : null
   }
   if (question && /^(ja|jepp|gjerne)/.test(t)) return "Supert, da gjør jeg det."
@@ -1661,7 +1669,7 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   if (t.includes("bonus"))
     return "Send meg beløp per person, så legger jeg det inn på novemberlønnen."
   if (t.includes("firmabil") || t.includes("bil"))
-    return "Elbil til 450 000 koster dere rundt 6 200 kr i måneden etter skatt. Kjøregodtgjørelse for Jonas lå på 1 900 i snitt. Jeg ville latt være."
+    return "Det kommer blant annet an på hvor mye Jonas kjører i jobb og privat. Jeg sammenligner kostnaden for en elbil som firmabil med at han bruker egen bil og får kilometergodtgjørelse, og kommer tilbake med en oversikt."
   return `Takk, ${CONTACT.first}! Jeg ser på det og svarer deg i løpet av dagen.`
 }
 
@@ -1717,7 +1725,7 @@ function Messages({
   onSettle,
 }: {
   active: boolean
-  /** The Nordic Cloud question was already answered on the timeline. */
+  /** The representation question was already answered on the timeline. */
   settled: boolean
   /** A question pre-written by a flag; a new value lands in the composer. */
   prefill: { text: string; n: number } | null
@@ -1864,7 +1872,7 @@ function Messages({
     if (settling)
       onSettle(
         "nordic-cloud",
-        /^nei/i.test(clean) ? "Alt i oktober" : "Fordel over året",
+        /^nei/i.test(clean) ? "Internt, ansatte" : "Med kunde",
       )
     // He reads it first, then writes. His answer comes from the model
     // when there is one; the yes/no on his own question stays scripted so
@@ -2371,6 +2379,10 @@ export function KundeDashboard({ className }: { className?: string }) {
                         </span>
                         <span className="text-muted-foreground">
                           Tall per {report.asOf}, fra Tripletex
+                        </span>
+                        <span className="text-muted-foreground">
+                          Regnskapsår {FIRM.fiscalYear.start} –{" "}
+                          {FIRM.fiscalYear.end}
                         </span>
                       </div>
                       <TrulsPhoto className="size-10 sm:order-first" />
