@@ -1644,11 +1644,11 @@ function trulsReplies(text: string, asked: Message | undefined): string | null {
   const t = text.toLowerCase().trim()
   const question = asked?.from === "truls" && asked.text.trim().endsWith("?")
   if (question && asked.text === LIVE_MESSAGE) {
-    return /^(ja|yes|jepp|gjerne)/.test(t)
-      ? "Supert, da fører jeg den som representasjon. Send meg gjerne navnene på de som deltok og formålet, det må stå på bilaget."
-      : /^nei/.test(t)
-        ? "Greit, da fører jeg den som intern bevertning. Send meg gjerne navnene på de som deltok."
-        : null
+    if (/okt\w*\s*[–-]|nov|des|måneder|kvartal/.test(t))
+      return "Takk! Da periodiserer jeg kostnaden over den perioden. Oppgaven er ute av listen din."
+    if (/okt/.test(t))
+      return "Takk! Da fører jeg hele kostnaden i oktober. Oppgaven er ute av listen din."
+    return "Takk! Da periodiserer jeg kostnaden over perioden du oppgir, og sjekker med leverandøren om nødvendig."
   }
   if (question && /^(ja|jepp|gjerne)/.test(t)) return "Supert, da gjør jeg det."
   if (question && /^nei/.test(t)) return "Greit, da lar jeg det ligge."
@@ -1725,7 +1725,7 @@ function Messages({
   onSettle,
 }: {
   active: boolean
-  /** The representation question was already answered on the timeline. */
+  /** The delivery-period question was already answered on the timeline. */
   settled: boolean
   /** A question pre-written by a flag; a new value lands in the composer. */
   prefill: { text: string; n: number } | null
@@ -1872,7 +1872,11 @@ function Messages({
     if (settling)
       onSettle(
         "nordic-cloud",
-        /^nei/i.test(clean) ? "Internt, ansatte" : "Med kunde",
+        /okt\w*\s*[–-]|nov|des|måneder|kvartal/i.test(clean)
+          ? "Oktober–desember"
+          : /okt/i.test(clean)
+            ? "Oktober"
+            : clean,
       )
     // He reads it first, then writes. His answer comes from the model
     // when there is one; the yes/no on his own question stays scripted so
@@ -2097,7 +2101,22 @@ function Messages({
               Send til {ACCOUNTANT.first}
             </Button>
           ) : null}
-          {quick ? (
+          {quick && last.text === LIVE_MESSAGE ? (
+            <div className="flex flex-wrap gap-2">
+              {(TODOS.find((t) => t.kind === "choice")?.options ?? []).map(
+                (option, i) => (
+                  <Button
+                    key={option}
+                    size="sm"
+                    variant={i === 0 ? "default" : "outline"}
+                    onClick={() => send(option)}
+                  >
+                    {option}
+                  </Button>
+                ),
+              )}
+            </div>
+          ) : quick ? (
             <div className="flex gap-2">
               <Button size="sm" onClick={() => send("Ja")}>
                 <CheckIcon data-icon="inline-start" aria-hidden="true" />

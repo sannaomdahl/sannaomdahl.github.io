@@ -97,12 +97,12 @@ export const TODOS: Todo[] = [
   {
     id: "nordic-cloud",
     kind: "choice",
-    title: "Restaurant Kontrast, 4 850 kr",
+    title: "Nordic Consulting AS, 96 000 kr",
     detail:
-      "Middag 14. oktober, betalt med firmakortet. Var det representasjon med kunde, eller internt med ansatte? Skriv gjerne hvem som deltok og formålet, det må stå på bilaget.",
+      "Vi ser at fakturaen fra Nordic Consulting gjelder konsulentarbeid, men mangler opplysning om leveringsperiode. Kan dere spesifisere hvilken periode arbeidet gjelder?",
     due: "2026-10-28",
     holdsUp: "Oktober lukkes 6. november",
-    options: ["Med kunde", "Internt, ansatte"],
+    options: ["Oktober", "Oktober–desember"],
     action: "Velg",
   },
 ]
@@ -1027,13 +1027,13 @@ export const THREADS: Thread[] = [
 /** Where documents can come from, besides a drop. */
 export const SOURCES = ["Gmail", "Outlook", "Google Drive", "Claude", "ChatGPT"]
 
-/** The same, when the representation question was already answered on the timeline. */
+/** The same, when the delivery-period question was already answered on the timeline. */
 export const LIVE_MESSAGE_SETTLED =
-  "Hei Andrea! Månedsavslutningen for september er klar. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønnskostnadene økte med 64 000 kr fordi Nora startet 1. september. Middagen på Restaurant Kontrast fører jeg slik du svarte."
+  "Hei Andrea! Månedsavslutningen for september er klar. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønnskostnadene økte med 64 000 kr fordi Nora startet 1. september. Fakturaen fra Nordic Consulting fører jeg etter perioden du oppga."
 
 /** Lands when Meldinger is opened: September is closed, with one question. */
 export const LIVE_MESSAGE =
-  "Hei Andrea! Månedsavslutningen for september er klar. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønnskostnadene økte med 64 000 kr fordi Nora startet 1. september. Ett spørsmål: var middagen på Restaurant Kontrast 14. oktober, 4 850 kr, representasjon med kunde?"
+  "Hei Andrea! Månedsavslutningen for september er klar. Omsetningen endte på 1 284 000 kr, 12 % opp fra august, mest fra to nye kunder. Lønnskostnadene økte med 64 000 kr fordi Nora startet 1. september. Ett spørsmål: fakturaen fra Nordic Consulting på 96 000 kr mangler leveringsperiode. Kan dere spesifisere hvilken periode arbeidet gjelder?"
 
 /** Things people ask Truls, as one-tap starters in the chat. */
 export const STARTERS = [
